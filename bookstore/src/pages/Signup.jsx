@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-// Use this for easy dev/prod switching
+// Change this to your deployed backend URL
 export const API_URL =
   process.env.NODE_ENV === "production"
-    ? "https://bookstore-backend.onrender.com" // ← Replace with your deployed backend
+    ? "https://bookstore-backend.onrender.com" // ← Replace with your deployed backend URL
     : "http://localhost:5000";
 
 function Signup() {
@@ -30,13 +30,13 @@ function Signup() {
     try {
       const res = await axios.post(`${API_URL}/api/signup`, form);
 
-      // Save JWT and user info
+      // Save JWT and user info in localStorage
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       alert(res.data.message || "Signup successful ✅");
 
-      navigate("/"); // redirect to homepage
+      navigate("/"); // Redirect to homepage
     } catch (err) {
       console.log(err.response?.data); // debug backend errors
       alert(err.response?.data?.message || "Signup failed ❌");

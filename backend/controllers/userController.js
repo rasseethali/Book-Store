@@ -7,24 +7,32 @@ export const signup = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    // check user already exists
+    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // hash password
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // create user
+    // Create user
     const user = await User.create({
       username,
       email,
       password: hashedPassword,
     });
 
+    // Generate JWT for immediate login
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
     res.status(201).json({
       message: "Signup successful ✅",
+      token,  // <-- send JWT
       user: {
         id: user._id,
         username: user.username,
@@ -42,22 +50,22 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // check user exists
+    // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
 
-    // compare password
+    // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // generate token
+    // Generate token
     const token = jwt.sign(
-      { id: user._id },              
-      process.env.JWT_SECRET,        
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
