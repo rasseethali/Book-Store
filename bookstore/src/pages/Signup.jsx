@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import { API_URL } from "../config";
+
+// Use this for easy dev/prod switching
+export const API_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://bookstore-backend.onrender.com" // ← Replace with your deployed backend
+    : "http://localhost:5000";
 
 function Signup() {
   const navigate = useNavigate();
@@ -15,26 +20,26 @@ function Signup() {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-     try {
-      const res = await axios.post(
-        "https://your-backend-url.onrender.com/api/signup", // ← Replace with your deployed backend URL
-        form
-      );
+    try {
+      const res = await axios.post(`${API_URL}/api/signup`, form);
+
+      // Save JWT and user info
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
       alert(res.data.message || "Signup successful ✅");
-      navigate("/login");
+
+      navigate("/"); // redirect to homepage
     } catch (err) {
-      alert(err?.response?.data?.message || "Signup failed ❌");
+      console.log(err.response?.data); // debug backend errors
+      alert(err.response?.data?.message || "Signup failed ❌");
     } finally {
       setLoading(false);
     }
@@ -43,17 +48,14 @@ function Signup() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-white to-green-200">
       <div className="w-full max-w-md bg-white/90 backdrop-blur-xl p-8 rounded-2xl shadow-2xl">
-
         <h2 className="text-3xl font-extrabold text-center text-green-700 mb-2">
           Create Account
         </h2>
-
         <p className="text-center text-gray-500 mb-6">
           Join our bookstore community 📚
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-
           <input
             name="username"
             value={form.username}
@@ -62,7 +64,6 @@ function Signup() {
             placeholder="Username"
             className="w-full border px-4 py-3 rounded-lg"
           />
-
           <input
             name="email"
             type="email"
@@ -72,7 +73,6 @@ function Signup() {
             placeholder="Email"
             className="w-full border px-4 py-3 rounded-lg"
           />
-
           <input
             name="password"
             type="password"
@@ -82,7 +82,6 @@ function Signup() {
             placeholder="Password"
             className="w-full border px-4 py-3 rounded-lg"
           />
-
           <button
             type="submit"
             disabled={loading}
