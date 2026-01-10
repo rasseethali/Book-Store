@@ -1,22 +1,21 @@
 import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { CartContext } from '../CartContext';
-import books from "../data/books";
-
+import books from '../data/books';
 
 function BookDetails() {
   const { id } = useParams();
   const { cart, setCart } = useContext(CartContext);
 
-  const book = books.find((b) => b.id === id);
-  if (!book) return <p className="p-4 text-center text-gray-500">Book not found.</p>;
+  const book = books.find((b) => b.id === Number(id)); // ✅ cast to number
+  if (!book) return <p className="p-4 text-center text-gray-500">Book not found.</p>; // ✅ check book, not books
 
   const addToCart = () => {
-    const existing = cart.find((item) => item.id === id);
+    const existing = cart.find((item) => item.id === book.id);
     let updatedCart;
     if (existing) {
       updatedCart = cart.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        item.id === book.id ? { ...item, quantity: item.quantity + 1 } : item
       );
     } else {
       updatedCart = [...cart, { ...book, quantity: 1 }];
@@ -27,7 +26,11 @@ function BookDetails() {
 
   return (
     <div className="container mx-auto p-4 flex flex-col md:flex-row gap-8">
-      <img className="w-full md:w-1/3 h-auto object-cover rounded shadow" src={book.image} alt={book.title} />
+      <img
+        className="w-full md:w-1/3 h-auto object-cover rounded shadow"
+        src={book.image}
+        alt={book.title}
+      />
       <div className="flex-1 space-y-4">
         <h2 className="text-2xl font-bold">{book.title}</h2>
         <p className="text-gray-600">Author: {book.author}</p>
