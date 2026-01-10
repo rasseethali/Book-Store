@@ -25,9 +25,9 @@ function Signup() {
     e.preventDefault();
     setLoading(true);
 
-    try {
+     try {
       const res = await axios.post(
-        `${API_URL}/api/signup`, // ✅ Render backend URL
+        "https://your-backend-url.onrender.com/api/signup", // ← Replace with your deployed backend URL
         form
       );
 
