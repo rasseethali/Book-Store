@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from "../config";
+
 
 // Change this to your deployed backend URL
 export const API_URL =
   process.env.NODE_ENV === "production"
-    ? "https://bookstore-backend.onrender.com" // ← Replace with your deployed backend URL
+    ? "https://book-store-backend-o0p0.onrender.com" // ← Replace with your deployed backend URL
     : "http://localhost:5000";
 
 function Signup() {
