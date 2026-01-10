@@ -3,49 +3,35 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../config";
 
+const API_URL = import.meta.env.VITE_API_URL; // ✅ correct for Vite
 
 // Change this to your deployed backend URL
-export const API_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://book-store-backend-o0p0.onrender.com" // ← Replace with your deployed backend URL
-    : "http://localhost:5000";
-
 function Signup() {
   const navigate = useNavigate();
-
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
-
+  const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const res = await axios.post(`${API_URL}/api/signup`, form);
 
-      // Save JWT and user info in localStorage
+      // Save JWT and user
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
-
       alert(res.data.message || "Signup successful ✅");
-
-      navigate("/"); // Redirect to homepage
+      navigate("/");
     } catch (err) {
-      console.log(err.response?.data); // debug backend errors
+      console.log(err.response?.data);
       alert(err.response?.data?.message || "Signup failed ❌");
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-white to-green-200">

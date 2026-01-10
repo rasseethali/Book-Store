@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import { API_URL } from "../config"; // ← same as Signup
+import { API_URL } from "../config";
+ // ← same as Signup
 
 function Login() {
   const navigate = useNavigate();
@@ -16,8 +17,7 @@ function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post(`${API_URL}/api/login`, form);
-
+      const res = await axios.post(`${API_URL}/api/signup`, form);
       // Save JWT and user
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
