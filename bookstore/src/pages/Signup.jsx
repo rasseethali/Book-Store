@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../config";
 
-const API_URL = import.meta.env.VITE_API_URL; // ✅ correct for Vite
+
 
 // Change this to your deployed backend URL
 function Signup() {
