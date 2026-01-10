@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { CartContext } from '../CartContext';
-import books from '../data/book';
+import books from '../data/books';
 
 function BookDetails() {
   const { id } = useParams();

@@ -1,6 +1,6 @@
 import React from 'react';
 import BookCard from '../components/BookCard';
-import books from '../data/book';
+import books from '../data/books';
 
 function Home() {
   return (
