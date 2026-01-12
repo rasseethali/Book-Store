@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 
 
 app.use(cors({
-  origin: "https://your-frontend-url.vercel.app", // replace with your frontend URL
+  origin: "https://book-store-one-coral.vercel.app/", // replace with your frontend URL
   credentials: true,
 }));
 
