@@ -9,14 +9,19 @@ dotenv.config();
 
 const app = express();
 
-/* ✅ CORS – ONLY ONCE, TOP */
-app.use(cors({
-  origin: "https://book-store-one-coral.vercel.app",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
+/* ✅ CORS – ONLY ONCE */
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://book-store-cqxi49ufu-raseethalis-projects.vercel.app"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
-/* ✅ BODY PARSER – ONLY ONCE */
+/* ✅ JSON PARSER */
 app.use(express.json());
 
 /* ✅ ROUTES */
@@ -27,7 +32,7 @@ app.get("/", (req, res) => {
   res.send("Bookstore backend running ✅");
 });
 
-/* ✅ DB CONNECT */
+/* ✅ MONGODB */
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected ✅"))
