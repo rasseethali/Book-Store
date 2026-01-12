@@ -9,10 +9,17 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+/* ✅ CORS – ONLY ONCE, TOP */
+app.use(cors({
+  origin: "https://book-store-one-coral.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+
+/* ✅ BODY PARSER – ONLY ONCE */
 app.use(express.json());
 
-// Routes
+/* ✅ ROUTES */
 app.use("/api/books", bookRoutes);
 app.use("/api/orders", orderRoutes);
 
@@ -20,14 +27,7 @@ app.get("/", (req, res) => {
   res.send("Bookstore backend running ✅");
 });
 
-
-app.use(cors({
-  origin: "https://book-store-one-coral.vercel.app/", // replace with your frontend URL
-  credentials: true,
-}));
-
-app.use(express.json());
-// DB connect
+/* ✅ DB CONNECT */
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected ✅"))
