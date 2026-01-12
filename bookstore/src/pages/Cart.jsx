@@ -55,19 +55,18 @@ function Cart() {
     setIsSubmitting(true);
 
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/orders`,
-        {
-          userDetails: { name, phone: phoneNumber, address },
-          books: cart.map(item => ({
-            bookId: item.id,
-            title: item.title,
-            price: item.price,
-            quantity: item.quantity,
-          })),
-          totalPrice,
-        }
-      );
+     await axios.post(`${import.meta.env.VITE_API_URL}/api/orders`, {
+  userDetails: { name, phone: phoneNumber, address },
+  books: cart.map(item => ({
+    bookId: item.id,
+    title: item.title,
+    price: item.price,
+    quantity: item.quantity,
+  })),
+  totalPrice,
+});
+
+    
 
       alert("Order placed successfully ✅");
 

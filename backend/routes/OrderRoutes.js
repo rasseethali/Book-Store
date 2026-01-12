@@ -1,5 +1,5 @@
 import express from "express";
-import Order from "../models/Order.js"; // adjust path to your Order model
+import Order from "../models/Order.js";
 
 const router = express.Router();
 

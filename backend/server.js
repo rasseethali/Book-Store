@@ -8,26 +8,25 @@ import dotenv from "dotenv";
 dotenv.config();
 const app = express();
 
-/* ✅ CORS – allow frontend and local dev */
+// ✅ CORS at top
 app.use(cors({
   origin: [
-    "http://localhost:5173", // for local dev
-    "https://book-store-cqxi49ufu-raseethalis-projects.vercel.app" // your Vercel frontend
+    "https://book-store-cqxi49ufu-raseethalis-projects.vercel.app",
+    "http://localhost:5173"
   ],
   methods: ["GET","POST","PUT","DELETE"],
-  credentials: true,
+  credentials: true
 }));
 
-/* ✅ JSON body parser */
-app.use(express.json());
+app.use(express.json()); // ✅ body parser
 
-/* ✅ ROUTES */
+// ✅ ROUTES
 app.use("/api/books", bookRoutes);
 app.use("/api/orders", orderRoutes);
 
 app.get("/", (req, res) => res.send("Bookstore backend running ✅"));
 
-/* ✅ MONGO CONNECT */
+// ✅ MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected ✅"))
   .catch(err => console.error("MongoDB connection failed ❌", err));
