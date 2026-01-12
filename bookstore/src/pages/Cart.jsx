@@ -3,90 +3,50 @@ import { CartContext } from "../CartContext";
 import CartItem from "../components/CardItem";
 import { FaShoppingCart } from "react-icons/fa";
 import axios from "axios";
+import { API_URL } from "../config"; // ✅ Import at the top
 
 function Cart() {
   const { cart, setCart } = useContext(CartContext);
   const [totalPrice, setTotalPrice] = useState(0);
 
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // ... rest of your code
 
-  // Load cart from localStorage
-  useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) setCart(JSON.parse(savedCart));
-  }, [setCart]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  // Calculate total price
-  useEffect(() => {
-    const total = cart.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
-    setTotalPrice(total);
-  }, [cart]);
+    if (cart.length === 0) {
+      alert("Your cart is empty ❌");
+      return;
+    }
 
-  const handleQuantityChange = (id, quantity) => {
-    if (quantity < 1) return;
-    const updatedCart = cart.map(item =>
-      item.id === id ? { ...item, quantity } : item
-    );
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    try {
+      await axios.post(`${API_URL}/orders`, {
+        userDetails: { name, phone: phoneNumber, address },
+        books: cart.map(item => ({
+          bookId: item.id,
+          title: item.title,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+        totalPrice,
+      });
+
+      alert("Order placed successfully ✅");
+      setCart([]);
+      localStorage.removeItem("cart");
+      setName("");
+      setAddress("");
+      setPhoneNumber("");
+    } catch (error) {
+      console.error(error);
+      alert(error?.response?.data?.message || "Order failed ❌");
+    }
   };
 
-  const handleRemoveItem = (id) => {
-    const updatedCart = cart.filter(item => item.id !== id);
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-  };
+  // ... rest of your component
 
-  // ✅ PLACE ORDER
-  import { API_URL } from "../config"; // ✅ use config
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
 
-  if (cart.length === 0) {
-    alert("Your cart is empty ❌");
-    return;
-  }
-
-  if (!name || !address || !phoneNumber) {
-    alert("Please fill all fields ❌");
-    return;
-  }
-
-  setIsSubmitting(true);
-
-  try {
-    await axios.post(`${API_URL}/orders`, {
-      userDetails: { name, phone: phoneNumber, address },
-      books: cart.map(item => ({
-        bookId: item.id,
-        title: item.title,
-        price: item.price,
-        quantity: item.quantity,
-      })),
-      totalPrice,
-    });
-
-    alert("Order placed successfully ✅");
-
-    setCart([]);
-    localStorage.removeItem("cart");
-    setName("");
-    setAddress("");
-    setPhoneNumber("");
-  } catch (error) {
-    console.error(error);
-    alert(error?.response?.data?.message || "Order failed ❌");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
 
 
   return (
@@ -148,6 +108,6 @@ const handleSubmit = async (e) => {
       </div>
     </div>
   );
-}
+} 
 
 export default Cart;
