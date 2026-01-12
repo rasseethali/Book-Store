@@ -51,16 +51,29 @@ function Cart() {
     setIsSubmitting(true);
 
     try {
-      await axios.post("https://book-store-6oqh.onrender.com/api/orders/api/orders", {
-        userDetails: { name, phone: phoneNumber, address },
-        books: cart.map(item => ({
-          bookId: item.id,
-          title: item.title,
-          price: item.price,
-          quantity: item.quantity,
-        })),
-        totalPrice,
-      });
+      await axios.post(
+  "https://book-store-6oqh.onrender.com/api/orders",
+  {
+    userDetails: {
+      name,
+      phone: phoneNumber,
+      address
+    },
+    books: cart.map(item => ({
+      bookId: item.id,
+      title: item.title,
+      price: item.price,
+      quantity: item.quantity,
+    })),
+    totalPrice,
+  },
+  {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }
+);
+    
     } catch (error) {
       console.error(error);
       alert(error?.response?.data?.message || "Order failed ❌");
