@@ -22,7 +22,8 @@ app.use(express.json()); // ✅ body parser
 
 // ✅ ROUTES
 app.use("/api/books", bookRoutes);
-app.use("/api/orders", orderRoutes);
+app.use("/api/orders", ordersRoutes);
+
 
 app.get("/", (req, res) => res.send("Bookstore backend running ✅"));
 
