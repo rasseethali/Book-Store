@@ -12,7 +12,7 @@ const app = express();
 /* ✅ CORS */
 app.use(cors({
   origin: [
-    "http://localhost:5173", // for local dev
+     // for local dev
     "https://book-store-cqxi49ufu-raseethalis-projects.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
