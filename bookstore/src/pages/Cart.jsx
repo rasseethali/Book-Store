@@ -1,15 +1,48 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../CartContext";
-import CartItem from "../components/CardItem";
+import CartItem from "../components/CartItem";
 import { FaShoppingCart } from "react-icons/fa";
 import axios from "axios";
-import { API_URL } from "../config"; // ✅ Import at the top
+import { API_URL } from "../config";
 
 function Cart() {
   const { cart, setCart } = useContext(CartContext);
   const [totalPrice, setTotalPrice] = useState(0);
 
-  // ... rest of your code
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Load cart from localStorage
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) setCart(JSON.parse(savedCart));
+  }, [setCart]);
+
+  // Calculate total price
+  useEffect(() => {
+    const total = cart.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+    setTotalPrice(total);
+  }, [cart]);
+
+  const handleQuantityChange = (id, quantity) => {
+    if (quantity < 1) return;
+    const updatedCart = cart.map(item =>
+      item.id === id ? { ...item, quantity } : item
+    );
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
+
+  const handleRemoveItem = (id) => {
+    const updatedCart = cart.filter(item => item.id !== id);
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,6 +51,13 @@ function Cart() {
       alert("Your cart is empty ❌");
       return;
     }
+
+    if (!name || !address || !phoneNumber) {
+      alert("Please fill all fields ❌");
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
       await axios.post(`${API_URL}/orders`, {
@@ -32,6 +72,7 @@ function Cart() {
       });
 
       alert("Order placed successfully ✅");
+
       setCart([]);
       localStorage.removeItem("cart");
       setName("");
@@ -40,14 +81,20 @@ function Cart() {
     } catch (error) {
       console.error(error);
       alert(error?.response?.data?.message || "Order failed ❌");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  // ... rest of your component
-
-
-
-
+  if (cart.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+        <FaShoppingCart size={50} className="mb-4 animate-bounce" />
+        <p className="text-xl font-semibold">Your cart is empty</p>
+        <p className="mt-2">Add some books to get started!</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4 space-y-6">
@@ -108,6 +155,6 @@ function Cart() {
       </div>
     </div>
   );
-} 
+}
 
 export default Cart;
