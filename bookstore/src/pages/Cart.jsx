@@ -52,13 +52,9 @@ function Cart() {
 
     try {
       await axios.post(
-  "https://book-store-6oqh.onrender.com/api/orders",
+  `${import.meta.env.VITE_API_URL}/api/orders`,
   {
-    userDetails: {
-      name,
-      phone: phoneNumber,
-      address
-    },
+    userDetails: { name, phone: phoneNumber, address },
     books: cart.map(item => ({
       bookId: item.id,
       title: item.title,
@@ -66,14 +62,12 @@ function Cart() {
       quantity: item.quantity,
     })),
     totalPrice,
-  },
-  {
-    headers: {
-      "Content-Type": "application/json"
-    }
   }
 );
-    
+
+ 
+
+
     } catch (error) {
       console.error(error);
       alert(error?.response?.data?.message || "Order failed ❌");
