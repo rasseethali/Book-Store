@@ -6,19 +6,19 @@ import orderRoutes from "./routes/orderRoutes.js";
 import dotenv from "dotenv";
 
 dotenv.config();
-
 const app = express();
 
-/* ✅ CORS */
+/* ✅ CORS – allow frontend and local dev */
 app.use(cors({
   origin: [
-     // for local dev
-    "https://book-store-cqxi49ufu-raseethalis-projects.vercel.app"
+    "http://localhost:5173", // for local dev
+    "https://book-store-cqxi49ufu-raseethalis-projects.vercel.app" // your Vercel frontend
   ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET","POST","PUT","DELETE"],
   credentials: true,
 }));
 
+/* ✅ JSON body parser */
 app.use(express.json());
 
 /* ✅ ROUTES */
@@ -27,10 +27,10 @@ app.use("/api/orders", orderRoutes);
 
 app.get("/", (req, res) => res.send("Bookstore backend running ✅"));
 
-/* ✅ DB CONNECT */
+/* ✅ MONGO CONNECT */
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected ✅"))
-  .catch(err => console.error(err));
+  .catch(err => console.error("MongoDB connection failed ❌", err));
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log("Server running on port", PORT));
+app.listen(PORT, () => console.log(`Server running on port ${PORT} ✅`));
