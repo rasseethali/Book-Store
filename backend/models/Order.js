@@ -9,7 +9,7 @@ const orderSchema = new mongoose.Schema(
     },
     books: [
       {
-        bookId: String, // 🔥 FIX (string)
+        bookId: String,   // frontend item.id
         title: String,
         price: Number,
         quantity: Number,
