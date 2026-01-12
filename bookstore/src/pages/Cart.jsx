@@ -51,7 +51,7 @@ function Cart() {
     setIsSubmitting(true);
 
     try {
-      await axios.post("https://book-store-backend-o0p0.onrender.com/api/orders", {
+      await axios.post("https://book-store-6oqh.onrender.com/api/orders/api/orders", {
         userDetails: { name, phone: phoneNumber, address },
         books: cart.map(item => ({
           bookId: item.id,
@@ -71,7 +71,7 @@ function Cart() {
 
   const placeOrder = async () => {
   try {
-    const response = await axios.post("https://book-store-backend-o0p0.onrender.com/api/orders", {
+    const response = await axios.post("https://book-store-6oqh.onrender.com/api/orders/api/orders", {
       userDetails: { name, phone: phoneNumber, address },
       books: cart.map(item => ({
         bookId: item.id,
