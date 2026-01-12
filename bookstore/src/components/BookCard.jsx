@@ -1,57 +1,51 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { FaCartPlus } from 'react-icons/fa';
-import { CartContext } from '../CartContext';
+import { Link } from "react-router-dom";
 
 function BookCard({ book }) {
-  const { cart, setCart } = useContext(CartContext);
-
-  const handleAddToCart = () => {
-    const existing = cart.find((item) => item.id === book.id);
-    let updatedCart;
-
-    if (existing) {
-      // Increase quantity if already in cart
-      updatedCart = cart.map((item) =>
-        item.id === book.id ? { ...item, quantity: item.quantity + 1 } : item
-      );
-    } else {
-      // Add new book
-      updatedCart = [...cart, { ...book, quantity: 1 }];
-    }
-
-    setCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    alert(`${book.title} added to cart!`);
-  };
-
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4 flex flex-col items-center transform hover:scale-105 transition-transform duration-300 hover:shadow-2xl">
-      {/* Book Image */}
-      <img
-        className="w-32 h-48 object-cover rounded-md mb-4"
-        src={book.image}
-        alt={book.title}
-      />
+    <div
+      className="group bg-white/70 backdrop-blur-xl rounded-2xl
+                 shadow-md hover:shadow-2xl
+                 transition-all duration-500
+                 hover:-translate-y-2 overflow-hidden"
+    >
+      {/* Image */}
+      <div className="overflow-hidden">
+        <img
+          src={book.image}
+          alt={book.title}
+          className="w-full h-64 object-cover
+                     transition-transform duration-700
+                     group-hover:scale-110"
+        />
+      </div>
 
-      {/* Book Info */}
-      <h3 className="font-semibold text-lg text-center text-gray-800">{book.title}</h3>
-      <p className="text-green-700 font-bold mt-1">Price: ${book.price}</p>
+      {/* Content */}
+      <div className="p-5 space-y-2">
+        <h3 className="text-lg font-bold text-gray-800 line-clamp-1">
+          {book.title}
+        </h3>
 
-      {/* Action Buttons */}
-      <div className="mt-4 flex space-x-2">
+        <p className="text-sm text-gray-500">
+          {book.author}
+        </p>
+
+        <p className="text-xl font-extrabold text-green-600">
+          ₹{book.price}
+        </p>
+
+        {/* CTA */}
         <Link
           to={`/book/${book.id}`}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center"
+          className="inline-block mt-3 text-sm font-semibold
+                     text-emerald-600 relative
+                     after:absolute after:left-0 after:-bottom-1
+                     after:w-0 after:h-[2px]
+                     after:bg-emerald-600
+                     after:transition-all after:duration-300
+                     hover:after:w-full"
         >
-          View Details
+          View Details →
         </Link>
-        <button
-          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors flex items-center"
-          onClick={handleAddToCart}
-        >
-          <FaCartPlus className="mr-2" /> Add to Cart
-        </button>
       </div>
     </div>
   );

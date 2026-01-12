@@ -20,10 +20,10 @@ function Footer() {
         <div className="space-y-3">
           <h2 className="font-bold text-xl text-white">Follow Us</h2>
           <div className="flex flex-col space-y-2">
-            <a className="hover:text-green-400 transition-colors" href="https://www.facebook.com/bookstore" target="_blank" rel="noopener noreferrer">Facebook</a>
-            <a className="hover:text-green-400 transition-colors" href="https://www.twitter.com/bookstore" target="_blank" rel="noopener noreferrer">Twitter</a>
-            <a className="hover:text-green-400 transition-colors" href="https://www.instagram.com/bookstore" target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a className="hover:text-green-400 transition-colors" href="https://www.linkedin.com/company/bookstore" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a className="hover:text-green-400 transition-colors" href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+            <a className="hover:text-green-400 transition-colors" href="https://www.twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+            <a className="hover:text-green-400 transition-colors" href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a className="hover:text-green-400 transition-colors" href="https://www.linkedin.com/company" target="_blank" rel="noopener noreferrer">LinkedIn</a>
           </div>
         </div>
 
