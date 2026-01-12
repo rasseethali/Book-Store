@@ -3,6 +3,7 @@ import { CartContext } from "../CartContext";
 import CartItem from "../components/CardItem";
 import { FaShoppingCart } from "react-icons/fa";
 import axios from "axios";
+import { API_URL } from "../config";
 
 function Cart() {
   const { cart, setCart } = useContext(CartContext);
@@ -16,40 +17,29 @@ function Cart() {
   // Load cart from localStorage
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
-    }
+    if (savedCart) setCart(JSON.parse(savedCart));
   }, [setCart]);
 
   // Calculate total price
   useEffect(() => {
-    const total = cart.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     setTotalPrice(total);
   }, [cart]);
 
-  // Update quantity
   const handleQuantityChange = (id, quantity) => {
     if (quantity < 1) return;
-
-    const updatedCart = cart.map((item) =>
-      item.id === id ? { ...item, quantity } : item
-    );
-
+    const updatedCart = cart.map((item) => (item.id === id ? { ...item, quantity } : item));
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  // Remove item
   const handleRemoveItem = (id) => {
     const updatedCart = cart.filter((item) => item.id !== id);
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  // Place order
+  // ✅ Place order
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -61,23 +51,16 @@ function Cart() {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/orders", // 🔥 FIXED (lowercase)
-        {
-          userDetails: {
-            name,
-            phone: phoneNumber,
-            address,
-          },
-          books: cart.map((item) => ({
-            bookId: item.id, // 🔥 string id
-            title: item.title,
-            price: item.price,
-            quantity: item.quantity,
-          })),
-          totalPrice,
-        }
-      );
+      const response = await axios.post(`${API_URL}/api/orders`, {
+        userDetails: { name, phone: phoneNumber, address },
+        books: cart.map((item) => ({
+          bookId: item.id,
+          title: item.title,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+        totalPrice,
+      });
 
       alert(response.data.message || "Order placed successfully ✅");
 
@@ -121,14 +104,9 @@ function Cart() {
       </div>
 
       <div className="bg-white p-6 rounded shadow flex flex-col md:flex-row justify-between items-center">
-        <p className="text-2xl font-bold text-green-700">
-          Total: ₹{totalPrice}
-        </p>
+        <p className="text-2xl font-bold text-green-700">Total: ₹{totalPrice}</p>
 
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col md:flex-row gap-2 mt-4 md:mt-0"
-        >
+        <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-2 mt-4 md:mt-0">
           <input
             type="text"
             placeholder="Name"
