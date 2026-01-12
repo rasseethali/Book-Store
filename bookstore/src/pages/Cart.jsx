@@ -43,7 +43,7 @@ function Cart() {
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  // ✅ PLACE ORDER (ONLY ONE API CALL)
+  // ✅ PLACE ORDER
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -58,11 +58,7 @@ function Cart() {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/orders`,
         {
-          userDetails: {
-            name,
-            phone: phoneNumber,
-            address,
-          },
+          userDetails: { name, phone: phoneNumber, address },
           books: cart.map(item => ({
             bookId: item.id,
             title: item.title,

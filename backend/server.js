@@ -10,16 +10,15 @@ dotenv.config();
 const app = express();
 
 /* ✅ CORS – ONLY ONCE */
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://book-store-cqxi49ufu-raseethalis-projects.vercel.app"
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://book-store-cqxi49ufu-raseethalis-projects.vercel.app"
+  ],
+  methods: ["GET","POST","PUT","DELETE"],
+  credentials: true
+}));
+
 
 /* ✅ JSON PARSER */
 app.use(express.json());
