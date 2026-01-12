@@ -55,19 +55,54 @@ function Cart() {
     setIsSubmitting(true);
 
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/orders`,
-        {
-          userDetails: { name, phone: phoneNumber, address },
-          books: cart.map(item => ({
-            bookId: item.id,
-            title: item.title,
-            price: item.price,
-            quantity: item.quantity,
-          })),
-          totalPrice,
-        }
-      );
+      const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (cart.length === 0) {
+    alert("Your cart is empty ❌");
+    return;
+  }
+
+  setIsSubmitting(true);
+
+  try {
+    await axios.post(`${import.meta.env.VITE_API_URL}/api/orders`, {
+      userDetails: { name, phone: phoneNumber, address },
+      books: cart.map(item => ({
+        bookId: item.id,
+        title: item.title,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+      totalPrice,
+    });
+
+    alert("Order placed successfully ✅");
+
+    // Clear cart
+    setCart([]);
+    localStorage.removeItem("cart");
+    setName("");
+    setAddress("");
+    setPhoneNumber("");
+
+  } catch (error) {
+    console.error(error);
+    alert(error?.response?.data?.message || "Order failed ❌");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/orders`, {
+        userDetails: { name, phone: phoneNumber, address },
+        books: cart.map(item => ({
+          bookId: item.id,
+          title: item.title,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+        totalPrice,
+      });
 
       alert("Order placed successfully ✅");
 
@@ -85,16 +120,6 @@ function Cart() {
       setIsSubmitting(false);
     }
   };
-
-  if (cart.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-        <FaShoppingCart size={50} className="mb-4 animate-bounce" />
-        <p className="text-xl font-semibold">Your cart is empty</p>
-        <p className="mt-2">Add some books to get started!</p>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto p-4 space-y-6">
